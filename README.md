@@ -2,6 +2,16 @@
 
 An opinionated loop for shipping changes with coding agents: research when needed, challenge the decisions, split the work into PR-sized slices, then implement and review one slice at a time.
 
+<p align="left">
+  <a href="https://www.npmjs.com/package/@reforma/agentflow"><img src="https://img.shields.io/npm/v/@reforma/agentflow.svg" alt="npm"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/npm/l/@reforma/agentflow.svg" alt="MIT License"></a>
+  <a href="https://www.skills.sh/reforma-ai/agentflow"><img src="https://skills.sh/b/reforma-ai/agentflow" alt="skills.sh"></a>
+</p>
+
+<p align="center">
+  <img src="assets/banner.png" alt="AgentFlow — an opinionated workflow for coding agents" width="100%">
+</p>
+
 ```text
 Research → Grill → Plan → PR → Review → Commit
                           ↑                │
@@ -36,7 +46,7 @@ AgentFlow is what survived six months of shipping real PRs with agents. It keeps
 | `/tdd` | Works through one red-green slice at a time |
 | `/document` | Turns research, a plan, or a shipped change into a project page |
 
-## The loop
+## 🔄 The loop
 
 Research is optional. Most larger tasks need a plan. Almost every task benefits from Grill; a small, obvious change can go from Grill straight to implementation.
 
@@ -55,7 +65,7 @@ Repeat steps 4–7 until the plan is complete.
 > AgentFlow keeps research, plans, handoffs, and local setup state under `.agentflow/`.
 > Ignore the directory for a private workflow, or commit it when the team should share the artifacts.
 
-### 1. Learn how the area works
+### 🔍 1. Learn how the area works
 
 Research does not require a skill. A prompt such as "Find out how authentication works in this project" may be enough before implementation.
 
@@ -63,7 +73,7 @@ Use `/research` when the findings need to survive the chat. It runs the investig
 
 If you skip research, Grill can still surface missing context.
 
-### 2. Sharpen the idea with Grill
+### 🔥 2. Sharpen the idea with Grill
 
 Grill is the core of AgentFlow. Run `/grill` after research, or start there when the area is already familiar.
 
@@ -71,7 +81,7 @@ The agent explains its reading of the task, lists the assumptions and open decis
 
 The result is a task the agent does not have to reinterpret while coding.
 
-### 3. Plan PR-sized slices
+### 🗂️ 3. Plan PR-sized slices
 
 For larger work, planning follows Grill in the same chat. After you confirm the decisions, Grill loads `/plan` when the change needs more than one slice. You can also run `/plan` directly. Small, confirmed work skips this step.
 
@@ -83,7 +93,7 @@ Lower-level work often comes first: behavior-preserving refactoring, shared type
 
 Keep the plan current as the work changes.
 
-### 4. Implement one slice
+### 🛠️ 4. Implement one slice
 
 Implement the first unchecked slice and stop there. Without a plan, keep the change small enough to review. You can stay in the current chat, start a fresh one, or write the code yourself. When context moves, bring the plan and latest handoff. Use `/tdd` for test-first work.
 
@@ -91,27 +101,27 @@ Load relevant skills named in `AGENTS.md`. If implementation spills into a later
 
 Before review, update `plan.md`. Check off the slice only after its checks pass, then record any scope changes that affect later work.
 
-### 5. Run an agent review
+### 🤖 5. Run an agent review
 
 Run `/code-review` on the completed slice. A subagent reviews what changed and why. It applies local fixes directly; anything it cannot decide comes back with the problem and a proposed fix.
 
-### 6. Review and commit
+### ✅ 6. Review and commit
 
 Read the diff yourself, then commit it through the project's normal workflow.
 
-### 7. Refresh the context
+### 🔄 7. Refresh the context
 
 Stay in the current chat while its context is useful. When it gets noisy, summarize it or start a fresh one. `/handoff` records what shipped, what changed, and which slice comes next.
 
 Attach the plan and handoff to the new chat, then return to step 4.
 
-### 8. Archive or document the result
+### 📚 8. Archive or document the result
 
 Run `/document` when the work belongs in a durable project page. It updates an existing page for that domain when one exists; otherwise it writes to the project's docs tree or `.agentflow/docs/<domain>/`. It then removes the packaged `.agentflow/<slug>/` working files.
 
 Skip this step when the work does not need a page.
 
-## Install
+## 📦 Install
 
 ### CLI
 
@@ -166,7 +176,7 @@ Cursor supports the portable root manifest. Install AgentFlow from **Customize**
 
 The root `plugin.json` and `skills/` directory are the source of truth. `.claude-plugin`, `.agents/plugins`, and `.cursor-plugin` contain client-specific distribution metadata. On release, keep the npm package, portable plugin, and Claude plugin versions in sync. Marketplace entries inherit the plugin version instead of duplicating it.
 
-## How it compares
+## ⚖️ How it compares
 
 [OpenSpec](https://github.com/Fission-AI/OpenSpec) keeps proposals, requirements, designs, tasks, and completed changes in a spec tree. That fits teams whose development process centers on specs. AgentFlow keeps one plan and creates a handoff only when context moves.
 
@@ -174,7 +184,7 @@ The root `plugin.json` and `skills/` directory are the source of truth. `.claude
 
 An unstructured chat is still the shortest path for a small fix. AgentFlow starts to pay for itself when a change spans decisions, reviewable slices, or more than one context window.
 
-## Release
+## 🚀 Release
 
 Add a changeset for every publishable change:
 
@@ -192,10 +202,10 @@ bun run test
 bun publish --dry-run
 ```
 
-## License
+## 📄 License
 
 AgentFlow is available under the [MIT License](LICENSE).
 
-## Maintainer
+## 👤 Maintainer
 
 Maintained by [@kachurun](https://github.com/kachurun).

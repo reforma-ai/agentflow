@@ -8,6 +8,7 @@
     "agentflow": "bin/agentflow.js"
   },
   "files": [
+    "assets",
     "bin",
     "skills",
     "plugin.json",

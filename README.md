@@ -40,6 +40,11 @@ AgentFlow installs as one `/agentflow` skill. Choose a mode when you know the
 next step, or describe what you want in ordinary language and let AgentFlow
 route the request.
 
+You do not need to invoke AgentFlow by name. Its activation description tells
+agents to load it automatically for software work larger than a quick fix, find
+the earliest necessary phase, and follow the loop from there. Explicit commands
+remain useful when you want to force a particular mode.
+
 | Command | What it does |
 | --- | --- |
 | `/agentflow research` | Saves research that should survive the current chat |

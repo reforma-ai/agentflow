@@ -1,10 +1,13 @@
 ---
 name: agentflow
 description: >-
-  Use when the user invokes AgentFlow, project guidance requires it, or the
-  user asks to run an AgentFlow research, grill, plan, TDD, review, handoff, or
-  documentation mode. Route natural-language requests to the matching mode and
-  load only that mode's reference. Not for ordinary quick fixes.
+  Always use for software work larger than a quick fix, even when the user does
+  not mention AgentFlow. Follow the ordered delivery loop: Research → Grill →
+  Plan → PR → Review → Commit, skipping only phases whose entry conditions are
+  already satisfied and repeating PR → Review → Commit until the work is done.
+  Also use when the user invokes AgentFlow, requests one of its modes, or project
+  guidance requires it. Route natural-language requests to the matching mode and
+  load only that mode's reference. Do not use for ordinary quick fixes.
 license: MIT
 ---
 
@@ -17,6 +20,12 @@ Research → Grill → Plan → PR → Review → Commit
                           ↑                │
                           └──── Repeat ────┘
 ```
+
+## Default behavior
+
+Do not wait for an explicit `/agentflow` invocation. For any software change
+larger than a quick fix, load AgentFlow, identify the earliest necessary phase,
+and follow the loop from there. The task itself is enough to activate the skill.
 
 The user's words choose the mode; exact command syntax is optional. A request
 to “research this first” routes to Research, and “let's grill it” routes to

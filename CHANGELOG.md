@@ -1,5 +1,11 @@
 # @reforma/agentflow
 
+## 2.0.2
+
+### Patch Changes
+
+- 4205a94: Activate AgentFlow automatically for software work larger than a quick fix and expose the ordered delivery loop in the skill description.
+
 ## 2.0.1
 
 ### Patch Changes

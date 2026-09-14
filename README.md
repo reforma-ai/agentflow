@@ -36,9 +36,9 @@ AgentFlow is what survived six months of shipping real PRs with agents. It keeps
 
 ## One skill, seven modes
 
-AgentFlow installs as one `/agentflow` skill. Add a mode when you know the next
-step, or describe what you want in ordinary language and let the skill route
-the request. Only that mode's instructions enter the context.
+AgentFlow installs as one `/agentflow` skill. Choose a mode when you know the
+next step, or describe what you want in ordinary language and let AgentFlow
+route the request.
 
 | Command | What it does |
 | --- | --- |

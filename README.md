@@ -184,6 +184,10 @@ The root `plugin.json` and `skills/` directory are the source of truth. `.claude
 
 An unstructured chat is still the shortest path for a small fix. AgentFlow starts to pay for itself when a change spans decisions, reviewable slices, or more than one context window.
 
+## 🔗 Related project
+
+Need better prose alongside the development workflow? [Prosecraft](https://github.com/reforma-ai/prosecraft) provides skills for humanizing drafts, writing technical documentation and UI copy, and creating agent skills.
+
 ## 🚀 Release
 
 Add a changeset for every publishable change:

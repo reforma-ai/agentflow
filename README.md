@@ -48,7 +48,7 @@ AgentFlow is what survived six months of shipping real PRs with agents. It keeps
 
 ## 🔄 The loop
 
-Research is optional. Most larger tasks need a plan. Almost every task benefits from Grill; a small, obvious change can go from Grill straight to implementation.
+You can skip research, but most larger tasks still need a plan. Grill helps on almost everything, though a small, obvious change can go straight from there to implementation.
 
 1. Learn how the area works, if needed.
 2. Sharpen the idea with Grill.

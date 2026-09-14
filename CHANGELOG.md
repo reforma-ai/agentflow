@@ -1,5 +1,25 @@
 # @reforma/agentflow
 
+## 2.0.0
+
+### Major Changes
+
+- fc3bad8: Replace the separate workflow skills with one `agentflow` skill that routes research, grill, plan, TDD, review, handoff, and documentation requests to focused references.
+
+### Minor Changes
+
+- b2382a7: Ship the repo as an Agent Plugins package, with a Claude Code overlay on the same skills tree.
+
+### Patch Changes
+
+- 0da77d7: Restore the README banner, badges, and visual section markers, and include the banner asset in the published npm package.
+- 268cac9: Link AgentFlow and Prosecraft from their READMEs so users can discover the companion writing skills.
+- b2382a7: Run `/code-review` in one subagent that fixes locally and returns what it changed versus what needs a decision.
+- 444ce96: Rename GH Org
+- c43464a: Smooth an overly segmented paragraph in the README.
+- c4b3b50: Ask grill rounds as ordinary chat text. Skip a second host questionnaire that re-asks the same questions.
+- b2382a7: Run `/research` in a subagent so the parent chat keeps the takeaway, not the search trail.
+
 ## 1.2.3
 
 ### Patch Changes

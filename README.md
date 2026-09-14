@@ -50,7 +50,7 @@ the request. Only that mode's instructions enter the context.
 | `/agentflow handoff` | Saves the context needed to continue in another chat |
 | `/agentflow document` | Turns research, a plan, or a shipped change into a project page |
 
-The mode does not have to be literal. `/agentflow давай поресерчим` and
+The mode does not have to be literal. `/agentflow research this first` and
 `/agentflow let's grill this` route to the same references as the explicit
 commands. `/agentflow continue` resumes the first unfinished slice from the
 current plan or handoff.

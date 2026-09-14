@@ -1,17 +1,9 @@
----
-name: plan
-description: >-
-  Use when decisions are settled and the work needs ordered PR-sized slices, or
-  when an existing plan must be updated after scope bleed. Not grill. Not
-  handoff.
-license: MIT
----
-
 # Plan
 
 Write **one** plan another developer or agent can pick up without this chat.
 
-Open decisions → load `grill`, resume after the user confirms the reading.
+Open decisions → read [grill.md](grill.md), then resume after the user confirms
+the reading.
 One-line or obvious scope skips the plan. Do not implement.
 
 ## Where

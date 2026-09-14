@@ -1,9 +1,3 @@
----
-name: grill
-description: Relentless interview to sharpen a plan or design until every branch is resolved.
-license: MIT
----
-
 # Grill
 
 Interview until you reach a shared understanding. Map the work as a **design tree**: every decision branches into the decisions that hang off it.
@@ -85,7 +79,7 @@ After confirmation, continue the loop yourself. Do not ask which skill to run
 next.
 
 - A native planning flow is already open → continue there.
-- The confirmed work needs more than one shippable slice → load `plan` and
-  write it in this chat. The settled list becomes **Decisions** in the plan;
-  do not leave it only in this reply.
+- The confirmed work needs more than one shippable slice → read
+  [plan.md](plan.md) and write the plan in this chat. The settled list becomes
+  **Decisions** in the plan; do not leave it only in this reply.
 - One small slice is enough → implement that slice.

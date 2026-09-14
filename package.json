@@ -22,11 +22,11 @@
     "build": "bun build src/bin.ts --target=node --outfile=bin/agentflow.js --external skills --external @clack/prompts",
     "typecheck": "tsc --noEmit",
     "changeset": "bunx @changesets/cli",
-    "version-packages": "bunx @changesets/cli version",
+    "version-packages": "bunx @changesets/cli version && node scripts/sync-plugin-versions.mjs",
     "release": "bunx @changesets/cli publish",
     "test": "bun test",
     "validate:skills": "gh skill publish --dry-run",
-    "prepublishOnly": "bun run typecheck && bun run test && bun run build"
+    "prepublishOnly": "node scripts/sync-plugin-versions.mjs && bun run typecheck && bun run test && bun run build"
   },
   "simple-git-hooks": {
     "commit-msg": "bunx --no-install commitlint --edit \"$1\""

@@ -114,7 +114,7 @@ Usage:
   agentflow --version
 
 Commands:
-  init      Install AgentFlow skills, then optionally the docs
+  init      Install the AgentFlow skill, then optionally the docs
   update    Update AgentFlow, installing it first when needed
 
 The skills CLI handles agent, scope, and installation choices.
@@ -133,7 +133,7 @@ async function promptDocs(): Promise<boolean | null> {
       {
         value: false,
         label: 'No',
-        hint: 'skills only',
+        hint: 'skill only',
       },
     ],
     initialValue: true,
@@ -194,13 +194,13 @@ export async function runCli(
         'add',
         SKILLS_SOURCE,
         '--skill',
-        '*',
+        ...AGENTFLOW_SKILLS,
         ...installOptions,
       ]);
 
       if (status !== 0) {
         stderr.write(
-          `Agent skills install failed with exit code ${status}.\n`,
+          `AgentFlow skill install failed with exit code ${status}.\n`,
         );
         return status;
       }
@@ -209,7 +209,7 @@ export async function runCli(
 
       if (wantDocs === null) {
         writeSetupConfig(cwd, ['skills']);
-        finish('AgentFlow skills installed.', stdout);
+        finish('AgentFlow skill installed.', stdout);
         return 0;
       }
 
@@ -229,7 +229,7 @@ export async function runCli(
 
       if (status !== 0) {
         stderr.write(
-          `Agent skills update failed with exit code ${status}.\n`,
+          `AgentFlow skill update failed with exit code ${status}.\n`,
         );
         return status;
       }

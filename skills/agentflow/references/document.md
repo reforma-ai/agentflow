@@ -1,10 +1,3 @@
----
-name: document
-description: Turn research, a plan, or a shipped change into a durable project page.
-license: MIT
-disable-model-invocation: true
----
-
 # Document
 
 Write the human page from work already done in this chat. Distill. Do not copy
@@ -67,7 +60,8 @@ Lead with the thing the reader came for. Show commands, requests, and paths.
 Don't wait for outline approval unless the user asked for a structure, or the
 work is a multi-page set of **different jobs**. Redact secrets.
 
-Write with the picked job's shape in [shapes.md](shapes.md).
+Write with the picked job's shape in
+[document-shapes.md](document-shapes.md).
 
 ## 5. Remove
 

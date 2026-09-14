@@ -1,12 +1,3 @@
----
-name: research
-description: >-
-  Use when an area, technology, or landscape must be mapped before changing
-  code, or when findings need to survive compaction or a fresh chat. Not for a
-  one-file lookup.
-license: MIT
----
-
 # Research
 
 Learn how an area works and leave a map that another chat can use without

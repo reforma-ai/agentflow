@@ -1,12 +1,3 @@
----
-name: code-review
-description: >-
-  Use when a PR-sized slice is complete and needs review before commit, or when
-  the diff may reinvent APIs, add wrappers, or grow without shrinking. Not for
-  open-ended bug hunts.
-license: MIT
----
-
 # Code review
 
 Review a finished slice, shrink leftover structure, and fix obvious defects.

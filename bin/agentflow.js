@@ -78,15 +78,7 @@ import { spawnSync } from "node:child_process";
 import { readFileSync as readFileSync2 } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname as dirname2, resolve as resolve2 } from "node:path";
-var AGENTFLOW_SKILLS = [
-  "research",
-  "grill",
-  "plan",
-  "code-review",
-  "handoff",
-  "tdd",
-  "document"
-];
+var AGENTFLOW_SKILLS = ["agentflow"];
 var SKILLS_SOURCE = "reforma-ai/agentflow";
 var runSkills = (args) => {
   const require2 = createRequire(import.meta.url);
@@ -155,7 +147,7 @@ Usage:
   agentflow --version
 
 Commands:
-  init      Install AgentFlow skills, then optionally the docs
+  init      Install the AgentFlow skill, then optionally the docs
   update    Update AgentFlow, installing it first when needed
 
 The skills CLI handles agent, scope, and installation choices.
@@ -173,7 +165,7 @@ async function promptDocs() {
       {
         value: false,
         label: "No",
-        hint: "skills only"
+        hint: "skill only"
       }
     ],
     initialValue: true
@@ -222,18 +214,18 @@ ${help()}`);
         "add",
         SKILLS_SOURCE,
         "--skill",
-        "*",
+        ...AGENTFLOW_SKILLS,
         ...installOptions
       ]);
       if (status !== 0) {
-        stderr.write(`Agent skills install failed with exit code ${status}.
+        stderr.write(`AgentFlow skill install failed with exit code ${status}.
 `);
         return status;
       }
       const wantDocs = assumeDefaults ? true : await selectDocs();
       if (wantDocs === null) {
         writeSetupConfig(cwd, ["skills"]);
-        finish("AgentFlow skills installed.", stdout);
+        finish("AgentFlow skill installed.", stdout);
         return 0;
       }
       components = wantDocs ? ["skills", ...DOC_COMPONENTS] : ["skills"];
@@ -247,7 +239,7 @@ ${help()}`);
         ...forwarded
       ]);
       if (status !== 0) {
-        stderr.write(`Agent skills update failed with exit code ${status}.
+        stderr.write(`AgentFlow skill update failed with exit code ${status}.
 `);
         return status;
       }

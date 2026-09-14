@@ -16,7 +16,7 @@ const portableFields = [
   'license',
   'keywords',
   'extensions',
-] as const;
+];
 const schema =
   'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json';
 
@@ -25,10 +25,12 @@ function readJson(path: string): Record<string, unknown> {
 }
 
 test('root plugin.json is a skills-only Agent Plugins 1.0 package', () => {
+  const packageJson = readJson(resolve(root, 'package.json'));
   const plugin = readJson(resolve(root, 'plugin.json'));
 
   expect(plugin.$schema).toBe(schema);
   expect(plugin.name).toBe('agentflow');
+  expect(plugin.version).toBe(packageJson.version);
   for (const key of Object.keys(plugin)) {
     expect(portableFields).toContain(key);
   }
@@ -45,11 +47,29 @@ test('root plugin.json is a skills-only Agent Plugins 1.0 package', () => {
   for (const skill of skills) {
     expect(existsSync(resolve(root, 'skills', skill, 'SKILL.md'))).toBe(true);
   }
+
+  expect(skills).toEqual(['agentflow']);
+
+  for (const reference of [
+    'research.md',
+    'grill.md',
+    'plan.md',
+    'tdd.md',
+    'review.md',
+    'handoff.md',
+    'document.md',
+  ]) {
+    expect(
+      existsSync(resolve(root, 'skills', 'agentflow', 'references', reference)),
+    ).toBe(true);
+  }
 });
 
 test('Claude overlay names the same plugin without a portable schema', () => {
+  const packageJson = readJson(resolve(root, 'package.json'));
   const overlay = readJson(resolve(root, '.claude-plugin/plugin.json'));
 
   expect(overlay.name).toBe('agentflow');
+  expect(overlay.version).toBe(packageJson.version);
   expect(overlay).not.toHaveProperty('$schema');
 });

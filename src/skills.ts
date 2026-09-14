@@ -3,15 +3,7 @@ import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 
-export const AGENTFLOW_SKILLS = [
-  'research',
-  'grill',
-  'plan',
-  'code-review',
-  'handoff',
-  'tdd',
-  'document',
-];
+export const AGENTFLOW_SKILLS = ['agentflow'];
 
 export const SKILLS_SOURCE = 'reforma-ai/agentflow';
 

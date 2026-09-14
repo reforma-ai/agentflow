@@ -1,12 +1,3 @@
----
-name: handoff
-description: >-
-  Use when an implementation PR is done and unfinished work will continue in a
-  fresh chat, or when context is about to be compacted and the next slice needs
-  a durable baton. Not for mid-grill notes.
-license: MIT
----
-
 # Handoff
 
 Use this after an implementation PR when the next slice will continue in a
@@ -60,7 +51,7 @@ none
 
 <title>
 done when: <criterion>
-suggested: tdd / code-review / craft skills for the next slice
+suggested: AgentFlow tdd / review, plus project craft skills for the next slice
 ```
 
 ## Done

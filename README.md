@@ -34,17 +34,26 @@ AgentFlow is what survived six months of shipping real PRs with agents. It keeps
 - **The process starts with the task.** Developers do not need to learn a separate artifact tree before they can use it. The agent carries the workflow after the initial clarification.
 - **One slice at a time.** Settle decisions before coding, keep implementation to one PR-sized slice, and review that slice before starting the next. Optional steps can drop out; the order does not change.
 
-## Skills
+## One skill, seven modes
 
-| Skill | What it does |
+AgentFlow installs as one `/agentflow` skill. Add a mode when you know the next
+step, or describe what you want in ordinary language and let the skill route
+the request. Only that mode's instructions enter the context.
+
+| Command | What it does |
 | --- | --- |
-| `/research` | Saves research that should survive the current chat |
-| `/grill` | Questions an idea until the important decisions are clear |
-| `/plan` | Splits the work into PR-sized slices |
-| `/code-review` | Reviews the slice for reuse, leftover structure, and obvious defects |
-| `/handoff` | Saves the context needed to continue in another chat |
-| `/tdd` | Works through one red-green slice at a time |
-| `/document` | Turns research, a plan, or a shipped change into a project page |
+| `/agentflow research` | Saves research that should survive the current chat |
+| `/agentflow grill` | Questions an idea until the important decisions are clear |
+| `/agentflow plan` | Splits the work into PR-sized slices |
+| `/agentflow tdd` | Works through one red-green slice at a time |
+| `/agentflow review` | Reviews the slice for reuse, leftover structure, and obvious defects |
+| `/agentflow handoff` | Saves the context needed to continue in another chat |
+| `/agentflow document` | Turns research, a plan, or a shipped change into a project page |
+
+The mode does not have to be literal. `/agentflow давай поресерчим` and
+`/agentflow let's grill this` route to the same references as the explicit
+commands. `/agentflow continue` resumes the first unfinished slice from the
+current plan or handoff.
 
 ## 🔄 The loop
 
@@ -69,13 +78,13 @@ Repeat steps 4–7 until the plan is complete.
 
 Research does not require a skill. A prompt such as "Find out how authentication works in this project" may be enough before implementation.
 
-Use `/research` when the findings need to survive the chat. It runs the investigation in a subagent and writes the result to `.agentflow/<feature>/research/`, where it can be attached after context compaction or in a new chat.
+Use `/agentflow research` when the findings need to survive the chat. It runs the investigation in a subagent and writes the result to `.agentflow/<feature>/research/`, where it can be attached after context compaction or in a new chat.
 
 If you skip research, Grill can still surface missing context.
 
 ### 🔥 2. Sharpen the idea with Grill
 
-Grill is the core of AgentFlow. Run `/grill` after research, or start there when the area is already familiar.
+Grill is the core of AgentFlow. Run `/agentflow grill` after research, or start there when the area is already familiar.
 
 The agent explains its reading of the task, lists the assumptions and open decisions, and recommends an answer for each one. You confirm or correct the list. If an answer creates another important question, Grill keeps going.
 
@@ -83,9 +92,9 @@ The result is a task the agent does not have to reinterpret while coding.
 
 ### 🗂️ 3. Plan PR-sized slices
 
-For larger work, planning follows Grill in the same chat. After you confirm the decisions, Grill loads `/plan` when the change needs more than one slice. You can also run `/plan` directly. Small, confirmed work skips this step.
+For larger work, planning follows Grill in the same chat. After you confirm the decisions, AgentFlow enters Plan when the change needs more than one slice. You can also run `/agentflow plan` directly. Small, confirmed work skips this step.
 
-In a normal chat, `/plan` writes `.agentflow/<slug>/plan.md`. In Native Plan mode, the agent uses the client's planning flow and native plan artifact instead.
+In a normal chat, Plan writes `.agentflow/<slug>/plan.md`. In Native Plan mode, the agent uses the client's planning flow and native plan artifact instead.
 
 The plan keeps the settled Grill decisions and divides the feature into changes that can ship one by one. A slice is the smallest complete change that does something useful and has a clear check; it is not a quota of files or lines. Each slice records why it exists, what it leaves working, and which files it expects to change, so a fresh chat can pick it up without replaying the Grill conversation.
 
@@ -95,7 +104,7 @@ Keep the plan current as the work changes.
 
 ### 🛠️ 4. Implement one slice
 
-Implement the first unchecked slice and stop there. Without a plan, keep the change small enough to review. You can stay in the current chat, start a fresh one, or write the code yourself. When context moves, bring the plan and latest handoff. Use `/tdd` for test-first work.
+Implement the first unchecked slice and stop there. Without a plan, keep the change small enough to review. You can stay in the current chat, start a fresh one, or write the code yourself. When context moves, bring the plan and latest handoff. Use `/agentflow tdd` for test-first work.
 
 Load relevant skills named in `AGENTS.md`. If implementation spills into a later slice, update the plan instead of quietly expanding the current one.
 
@@ -103,7 +112,7 @@ Before review, update `plan.md`. Check off the slice only after its checks pass,
 
 ### 🤖 5. Run an agent review
 
-Run `/code-review` on the completed slice. A subagent reviews what changed and why. It applies local fixes directly; anything it cannot decide comes back with the problem and a proposed fix.
+Run `/agentflow review` on the completed slice. A subagent reviews what changed and why. It applies local fixes directly; anything it cannot decide comes back with the problem and a proposed fix.
 
 ### ✅ 6. Review and commit
 
@@ -111,13 +120,13 @@ Read the diff yourself, then commit it through the project's normal workflow.
 
 ### 🔄 7. Refresh the context
 
-Stay in the current chat while its context is useful. When it gets noisy, summarize it or start a fresh one. `/handoff` records what shipped, what changed, and which slice comes next.
+Stay in the current chat while its context is useful. When it gets noisy, summarize it or start a fresh one. `/agentflow handoff` records what shipped, what changed, and which slice comes next.
 
 Attach the plan and handoff to the new chat, then return to step 4.
 
 ### 📚 8. Archive or document the result
 
-Run `/document` when the work belongs in a durable project page. It updates an existing page for that domain when one exists; otherwise it writes to the project's docs tree or `.agentflow/docs/<domain>/`. It then removes the packaged `.agentflow/<slug>/` working files.
+Run `/agentflow document` when the work belongs in a durable project page. It updates an existing page for that domain when one exists; otherwise it writes to the project's docs tree or `.agentflow/docs/<domain>/`. It then removes the packaged `.agentflow/<slug>/` working files.
 
 Skip this step when the work does not need a page.
 
@@ -129,7 +138,7 @@ Skip this step when the work does not need a page.
 npx @reforma/agentflow init
 ```
 
-`init` installs the AgentFlow skills through the `skills` CLI, which asks for the target agents, scope, and installation method. AgentFlow then asks whether to set up project docs. If you choose yes, it writes `AGENTFLOW.md` and adds this pointer to `AGENTS.md`:
+`init` installs the AgentFlow skill through the `skills` CLI, which asks for the target agents, scope, and installation method. AgentFlow then asks whether to set up project docs. If you choose yes, it writes `AGENTFLOW.md` and adds this pointer to `AGENTS.md`:
 
 ```text
 Larger than a quick fix: follow @AGENTFLOW.md.
@@ -150,12 +159,12 @@ Other useful forms:
 ```bash
 npx @reforma/agentflow init --global --agent cursor
 npx @reforma/agentflow init --yes
-npx skills add reforma-ai/agentflow --skill grill
+npx skills add reforma-ai/agentflow --skill agentflow
 ```
 
 ### Agent plugin
 
-The portable Agent Plugin installs the skills as one package. It reads them directly from `skills/`; there is no generated copy or separate plugin build. Use the CLI above when AgentFlow should also configure project docs and `AGENTFLOW.md`.
+The portable Agent Plugin installs the same skill as one package. It reads it directly from `skills/`; there is no generated copy or separate plugin build. Use the CLI above when AgentFlow should also configure project docs and `AGENTFLOW.md`.
 
 For Claude Code:
 
@@ -172,7 +181,10 @@ codex plugin marketplace add reforma-ai/agentflow
 
 Then install **AgentFlow** from the Plugins Directory. If your Codex CLI does not recognize `codex plugin`, update Codex or use the CLI installation.
 
-Cursor supports the portable root manifest. Install AgentFlow from **Customize** when it is available in your marketplace; until then, use the CLI installation to add the same skills to Cursor.
+Cursor supports the portable root manifest. Install AgentFlow from **Customize** when it is available in your marketplace; until then, use the CLI installation to add the same skill to Cursor.
+
+Direct skill installs expose `/agentflow` or `$agentflow`, depending on the
+agent. Claude Code namespaces the plugin copy as `/agentflow:agentflow`.
 
 The root `plugin.json` and `skills/` directory are the source of truth. `.claude-plugin`, `.agents/plugins`, and `.cursor-plugin` contain client-specific distribution metadata. On release, keep the npm package, portable plugin, and Claude plugin versions in sync. Marketplace entries inherit the plugin version instead of duplicating it.
 

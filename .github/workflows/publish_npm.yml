@@ -51,9 +51,11 @@ jobs:
         if: ${{ steps.gate.outputs.run == 'true' }}
         run: bun install --frozen-lockfile
 
-      - name: Test
+      - name: Typecheck and test
         if: ${{ steps.gate.outputs.run == 'true' }}
-        run: bun run test
+        run: |
+          bun run typecheck
+          bun run test
 
       - name: Bump version and create changelog
         id: version

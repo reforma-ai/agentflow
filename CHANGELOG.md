@@ -1,5 +1,11 @@
 # @reforma/agentflow
 
+## 2.0.1
+
+### Patch Changes
+
+- 778cf44: Keep the public README examples entirely in English.
+
 ## 2.0.0
 
 ### Major Changes

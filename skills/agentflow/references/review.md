@@ -1,7 +1,8 @@
 # Code review
 
-Review a finished slice, shrink leftover structure, and fix obvious defects.
-Ask the user only when the call needs a product or design decision.
+Review a finished stage, refactor avoidable structure, and fix defects. This is
+not a lint pass: working code can still need structural changes. Ask the user
+only when the call needs a product or design decision.
 
 ## Isolation
 
@@ -11,13 +12,13 @@ review trail.
 **Parent.** Brief the subagent, then launch it with this skill's rules:
 
 1. **What changed** — scoped paths, or the git range to diff
-2. **Why** — the slice intent (PR briefing, user request, settled constraints
+2. **Why** — the stage intent (stage briefing, user request, settled constraints
    that affect this diff)
 
 When it finishes, relay its return. Do not re-review.
 
 **Subagent.** You were launched to review. Review, fix, and verify. Return
-the two lists. Do not launch another subagent.
+the assessment and applicable result sections. Do not launch another subagent.
 
 If this client cannot launch a subagent, review in this chat.
 
@@ -31,18 +32,28 @@ Otherwise: `git diff --no-color` and `git diff --cached --no-color`. No local
 diff → files from this conversation. Still nothing → `git show --stat --patch
 --no-color HEAD`.
 
-Stay inside that scope except to match existing patterns. Preserve unrelated
-user changes.
+The diff is the starting scope, not a restriction to line-local edits. A
+behavior-preserving refactor may reshape the changed code and its directly
+affected owners or consumers when that is necessary to leave the stage
+coherent. Do not refactor unrelated subsystems or pre-existing debt. Preserve
+unrelated user changes.
 
 ## Fix
 
 You review and you fix. Follow the nearest project guide (`AGENTS.md` or
 equivalent).
 
-Preserve behavior: only **how**, not **what**. Prefer readable, explicit code
-over fewer lines. Nested ternaries, dense one-liners, and mashed concerns are
-not simpler. A named abstraction that earns its place is keep. A new file or
-helper is wrong unless it removes more structure than it adds.
+Preserve behavior: only **how**, not **what**. Do not equate a safe review with
+a minimal diff. If the implementation works but its structure is harder to
+follow than nearby code, refactor it now. A refactor may rename, extract,
+inline, move responsibilities across affected files, consolidate duplicates,
+or replace the implementation shape when contracts and behavior stay intact.
+
+Prefer readable, explicit code over fewer lines. Nested ternaries, dense
+one-liners, and mashed concerns are not simpler. A named abstraction that earns
+its place is worth keeping. A new file or helper is wrong unless it removes more
+structure than it adds. Prefer the smallest refactor that fully resolves the
+problem, not the smallest edit.
 
 **Always check**
 
@@ -51,7 +62,8 @@ helper is wrong unless it removes more structure than it adds.
    already does the job → call it. No parallel wrapper. Duplicates in scope →
    keep the better one, retarget imports, delete the rest.
 2. **Smell** — pass-throughs, extra HTML/JSX, one-off barrels, muddy shape.
-   Inline or delete. Do not wrap a wrapper.
+   Inline, move, consolidate, or delete. Check whether responsibilities live in
+   the module that owns them. Do not wrap a wrapper.
 3. **Orphans** — unused imports, locals, helpers, exports, files, or
    commented-out blocks **this change** made dead. Grep real uses, including
    dynamic `import()` and string path lookups. Zero uses → delete. Public
@@ -65,13 +77,24 @@ helper is wrong unless it removes more structure than it adds.
 
 **Fix vs leave**
 
-- Local, obvious, behavior-preserving → do it.
-- Needs a product call, changes the contract, or is too large to do safely →
-  leave it on the decision list.
-- The whole approach is wrong → explain the replacement you would ship. Do not
-  nibble.
+- Behavior-preserving and verifiable inside the stage → do it, even when the
+  refactor spans several affected files.
+- Needs a product call, changes the contract, reaches an unrelated subsystem,
+  or cannot be verified safely → leave it on the decision list.
+- The whole implementation shape is wrong but a behavior-preserving replacement
+  fits the stage and can be verified → replace it. Otherwise explain the
+  replacement you would ship. Do not nibble.
 
-Tie-break: existing helper > inline > new helper. No edits outside scope.
+Tie-break: existing helper > inline > new helper. Moving code within the stage
+is allowed; unrelated edits are not.
+
+## Stop
+
+Inspect the diff, its ownership boundaries, concrete reuse candidates, and the
+tests that prove the stage. Use targeted searches; do not scan unrelated code
+for hypothetical improvements. If the structure already fits the surrounding
+code, say so in the assessment and stop. Do not refactor to prove the review was
+active.
 
 ## Verify
 
@@ -85,12 +108,24 @@ A bug you fixed with no covering test → add a regression test or list
 
 ## Output
 
-This is the whole return. Ordinary sentences.
+This is the whole return. Ordinary sentences. **Assessment** is required and
+names the structural conclusion, not the review trail.
 
 ```markdown
+### Assessment
+
+<What structure was evaluated and whether a broader refactor was warranted.>
+
 ### Fixed
 
 - <what you changed and why, one line each>
+
+### Follow-ups
+
+### <Improvement>
+
+<A concrete worthwhile improvement outside the safe review scope, why it
+matters, and what to change.>
 
 ### Needs a decision
 
@@ -101,15 +136,18 @@ This is the whole return. Ordinary sentences.
 <How to fix it. One obvious change → that change. A call they have to make → the real options and which you'd pick.>
 ```
 
-Omit **Fixed** when you changed nothing. Omit **Needs a decision** when
-nothing is left unfixed. The heading is the problem, not a category. Do not
-invent problems.
+Omit **Fixed** when you changed nothing. Omit **Follow-ups** when there is no
+concrete worthwhile improvement outside the safe review scope. A safe in-scope
+improvement is a fix, not a follow-up. Omit **Needs a decision** when nothing is
+left unfixed. The heading is the problem, not a category. Do not invent work.
 
 A check that failed → say which command and what failed. Passed checks stay
 out of the reply.
 
 ## Done
 
-The scoped change has no leftover production structure you could remove
-locally, obvious defects are fixed, verification ran this turn, and every
-unfixed problem is on the decision list with how to fix it.
+The assessment states whether the structure warranted a broader refactor. The
+stage has no avoidable production structure, including problems that need a
+multi-file behavior-preserving refactor. Defects are fixed, verification ran
+this turn, and every worthwhile improvement left outside the safe scope is a
+follow-up or decision with how to address it.

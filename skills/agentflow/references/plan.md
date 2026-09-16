@@ -4,7 +4,9 @@ Write **one** plan another developer or agent can pick up without this chat.
 
 Open decisions → read [grill.md](grill.md), then resume after the user confirms
 the reading.
-One-line or obvious scope skips the plan. Do not implement.
+When Plan was selected automatically, obvious work that fits one or two compact
+stages can keep the confirmed reading in chat and offer implementation instead.
+An explicit Plan request still writes a plan. Do not implement.
 
 ## Where
 
@@ -20,8 +22,8 @@ One-line or obvious scope skips the plan. Do not implement.
 # <Feature>
 
 > Keep this plan current during implementation.
-> Check a PR only after its done-when and verification pass.
-> Record scope changes before leaving the PR.
+> Check a stage only after its done-when and verification pass.
+> Record scope changes before leaving the stage.
 
 **Goal:** one sentence
 **Approach:** 2–3 sentences — how the pieces fit
@@ -37,10 +39,10 @@ One-line or obvious scope skips the plan. Do not implement.
 
 - <confirmed no>
 
-## PR 1 — <title>
+## Stage 1 — <title>
 
-**This PR:** 2–4 sentences for someone who was not in this chat. Why this
-slice exists, what it leaves working on its own, which settled decisions it
+**This stage:** 2–4 sentences for someone who was not in this chat. Why this
+stage exists, what coherent outcome it reaches, and which settled decisions it
 encodes. Not a file list.
 
 - [ ] Complete
@@ -55,9 +57,9 @@ encodes. Not a file list.
 **Done when:** <one observable sentence>
 **Verify:** `<command>`
 
-## PR 2 — <title>
+## Stage 2 — <title>
 
-**This PR:** …
+**This stage:** …
 
 - [ ] Complete
   - [ ] <outcome>
@@ -70,36 +72,49 @@ encodes. Not a file list.
 **Verify:** `<command>`
 ```
 
-**Decisions** is the grill, durable. **This PR** is the briefing for one
-slice. Tasks are outcomes. **Files** are the map.
+**Decisions** is the grill, durable. **This stage** is the briefing for one
+implementation and review boundary. Tasks are outcomes. **Files** are the map.
 
 Nested tasks are progress. Check **Complete** only after done-when and verify
-pass. The next PR starts from an unchecked Complete box, not a checked child.
+pass. The next stage starts from an unchecked Complete box, not a checked child.
 
-Each PR is the smallest complete, independently shippable change that does one
-useful thing and has one clear way to test it. Foundations before consumers.
+Each stage is the smallest coherent, reviewable implementation step with one
+clear outcome and a practical way to verify it. A stage is not necessarily a
+standalone pull request or independently deployable release. One real pull
+request may contain several stages.
+
+Dependencies determine stage order; they do not require each stage to be an
+independently deployable release. Do not add temporary mocks, adapters, feature
+paths, or scaffolding only to make an intermediate stage shippable. A completed
+stage leaves the repository internally consistent and passes verification
+relevant to its scope; the overall feature may still need later stages.
 
 ## Slicing
 
-- **Blocked by shape:** refactor the existing module, then the feature.
-- **Contract missing:** add the type or endpoint, then the consumer.
-- **Feature:** change the module that owns the behavior. Extract when this plan
-  already has a second consumer.
-- **Small:** one vertical slice.
-
-A foundation gets its own PR when others can ship against it. Feature-local UI
-and wiring stay with their first consumer. Distinct outcomes that can ship
-separately get separate PRs. More than five nested tasks → split the PR.
+- Slice by outcome, dependency, and reviewability — not by file count.
+- Substantial changes in distinct areas such as backend and frontend normally
+  get separate stages when each has a clear review boundary.
+- Combine areas only when the cross-area work is minor relative to the feature,
+  tightly coupled, and clearer to review together, or when splitting would
+  require disposable production scaffolding.
+- Give a foundation its own stage only when it is independently useful,
+  reusable by another consumer, meaningfully reduces risk, or needs separate
+  verification.
+- Split work when it contains distinct outcomes, independent architectural
+  decisions, substantially different verification, or too much context for one
+  reliable implementation pass.
+- Task count is a warning that a stage may be too large, not an automatic reason
+  to split it.
 
 ## Rules
 
-- Ground every PR in the files listed under it. A cited path exists, or it is
+- Ground every stage in the files listed under it. A cited path exists, or it is
   `create`.
-- One approach. No menu, no TBD, no “handle edge cases”, no “similar to PR n”.
+- One approach. No menu, no TBD, no “handle edge cases”, no “similar to Stage n”.
 - **Decisions** is one bullet per confirmed grill answer: what we will do.
   Discarded options stay out. **Out of scope** is the confirmed nos. Every
   confirmed grill answer lands in one of those two lists.
-- **This PR** applies the decisions that bind this slice. An agent who never
+- **This stage** applies the decisions that bind this stage. An agent who never
   saw the grill should understand the job from **Decisions** plus this
   paragraph, the tasks, and the files.
 - **Reuse** names the APIs to call. Tasks name outcomes, not a procedure.
@@ -112,13 +127,21 @@ separately get separate PRs. More than five nested tasks → split the PR.
 ## Self-check
 
 1. Every confirmed grill answer is in **Decisions** or **Out of scope**,
-   and has a PR or is named out of scope.
+   and has a stage or is named out of scope.
 2. Every path exists, or `create` names the existing home it cannot join.
-3. A person can open PR 1, read **Decisions** plus **This PR**, tasks, and
-   files, and ship without this conversation.
-4. Every PR leaves the repository working without the next PR to justify it.
+3. A person can open Stage 1, read **Decisions** plus **This stage**, tasks, and
+   files, and complete it without this conversation.
+4. Each stage boundary makes implementation or review meaningfully clearer; no
+   stages are separate only because they touch different layers or many files.
+5. A stage that crosses areas keeps the cross-area work minor and tightly
+   coupled. Substantial areas with clear review boundaries stay separate.
+6. No stage adds temporary production code that a later stage removes only to
+   make the intermediate state independently shippable.
+7. Every stage leaves the repository internally consistent and passes its
+   scoped verification. It need not complete or independently ship the whole
+   feature.
 
 ## Output
 
-Print the path. The implementer starts with the first PR whose Complete box is
+Print the path. The implementer starts with the first stage whose Complete box is
 unchecked, in this context or a new one.

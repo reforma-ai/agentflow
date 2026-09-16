@@ -75,11 +75,13 @@ before this confirmation.
 - <confirmed answer>
 ```
 
-After confirmation, continue the loop yourself. Do not ask which skill to run
-next.
+After confirmation, choose the next step. Do not ask which skill to run next.
 
 - A native planning flow is already open → continue there.
-- The confirmed work needs more than one shippable slice → read
+- The confirmed work needs durable coordination across several stages,
+  non-obvious dependencies, or a likely context handoff → read
   [plan.md](plan.md) and write the plan in this chat. The settled list becomes
   **Decisions** in the plan; do not leave it only in this reply.
-- One small slice is enough → implement that slice.
+- The work is obvious enough for one or two compact stages → keep the settled
+  list in this chat and offer to implement it next. Do not create a plan only
+  because the change crosses backend, frontend, or other project areas.

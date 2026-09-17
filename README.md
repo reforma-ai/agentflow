@@ -1,6 +1,6 @@
 # AgentFlow
 
-An opinionated loop for shipping changes with coding agents: research when needed, challenge the decisions, split the work into PR-sized slices, then implement and review one slice at a time.
+An opinionated loop for shipping changes with coding agents: research when needed, challenge the decisions, then implement and review one coherent stage at a time.
 
 <p align="left">
   <a href="https://www.npmjs.com/package/@reforma/agentflow"><img src="https://img.shields.io/npm/v/@reforma/agentflow.svg" alt="npm"></a>
@@ -13,9 +13,9 @@ An opinionated loop for shipping changes with coding agents: research when neede
 </p>
 
 ```text
-Research → Grill → Plan → PR → Review → Commit
-                          ↑                │
-                          └──── Repeat ────┘
+Research → Grill → Plan → Stage → Review → Commit
+                          ↑                   │
+                          └───── Repeat ─────┘
 ```
 
 ```bash
@@ -32,7 +32,7 @@ AgentFlow is what survived six months of shipping real PRs with agents. It keeps
 
 - **Specs are working artifacts.** Keep research and plans as durable specs, leave them local, or delete them after the PR. Git and pull requests stay at the center of the workflow.
 - **The process starts with the task.** Developers do not need to learn a separate artifact tree before they can use it. The agent carries the workflow after the initial clarification.
-- **One slice at a time.** Settle decisions before coding, keep implementation to one PR-sized slice, and review that slice before starting the next. Optional steps can drop out; the order does not change.
+- **One stage at a time.** Settle decisions before coding, keep implementation to one coherent review boundary, and review that stage before starting the next. A stage is not necessarily a pull request or release. Optional steps can drop out; the order does not change.
 
 ## One skill, seven modes
 
@@ -49,9 +49,9 @@ remain useful when you want to force a particular mode.
 | --- | --- |
 | `/agentflow research` | Saves research that should survive the current chat |
 | `/agentflow grill` | Questions an idea until the important decisions are clear |
-| `/agentflow plan` | Splits the work into PR-sized slices |
+| `/agentflow plan` | Records an ordered sequence of implementation stages |
 | `/agentflow tdd` | Works through one red-green slice at a time |
-| `/agentflow review` | Reviews the slice for reuse, leftover structure, and obvious defects |
+| `/agentflow review` | Reviews and refactors the stage, then fixes defects |
 | `/agentflow handoff` | Saves the context needed to continue in another chat |
 | `/agentflow document` | Turns research, a plan, or a shipped change into a project page |
 
@@ -62,18 +62,18 @@ current plan or handoff.
 
 ## 🔄 The loop
 
-You can skip research, but most larger tasks still need a plan. Grill helps on almost everything, though a small, obvious change can go straight from there to implementation.
+You can skip research. Plan is for work whose sequence needs a durable artifact; obvious work can go from Grill straight to implementation.
 
 1. Learn how the area works, if needed.
 2. Sharpen the idea with Grill.
-3. Split larger work into PR-sized slices.
-4. Implement one slice.
-5. Run an agent review.
+3. Plan implementation stages when the sequence needs a durable artifact.
+4. Implement one stage.
+5. Run an agent review on that stage.
 6. Review the diff yourself, then commit.
 7. Refresh the context when needed.
 8. Archive or document the result.
 
-Repeat steps 4–7 until the plan is complete.
+Repeat steps 4–7 until the confirmed scope is complete.
 
 > [!TIP]
 > AgentFlow keeps research, plans, handoffs, and local setup state under `.agentflow/`.
@@ -95,29 +95,29 @@ The agent explains its reading of the task, lists the assumptions and open decis
 
 The result is a task the agent does not have to reinterpret while coding.
 
-### 🗂️ 3. Plan PR-sized slices
+### 🗂️ 3. Plan implementation stages
 
-For larger work, planning follows Grill in the same chat. After you confirm the decisions, AgentFlow enters Plan when the change needs more than one slice. You can also run `/agentflow plan` directly. Small, confirmed work skips this step.
+Planning follows Grill when the work needs durable coordination across several stages, non-obvious dependencies, or a likely context handoff. Obvious work that fits one or two compact stages skips Plan, even when it touches backend and frontend. The confirmed reading stays in the chat, and the agent offers to implement it. You can also run `/agentflow plan` directly.
 
 In a normal chat, Plan writes `.agentflow/<slug>/plan.md`. In Native Plan mode, the agent uses the client's planning flow and native plan artifact instead.
 
-The plan keeps the settled Grill decisions and divides the feature into changes that can ship one by one. A slice is the smallest complete change that does something useful and has a clear check; it is not a quota of files or lines. Each slice records why it exists, what it leaves working, and which files it expects to change, so a fresh chat can pick it up without replaying the Grill conversation.
+The plan keeps the settled Grill decisions and divides the feature into coherent implementation stages. A stage has one clear outcome and a practical check; it is not a quota of files or lines, and it does not need to be an independently deployable release. One real pull request may contain several stages. Each stage records why it exists, its outcome, and which files it expects to change, so a fresh chat can pick it up without replaying the Grill conversation.
 
-Lower-level work often comes first: behavior-preserving refactoring, shared types, backend work, then the interface that uses them. That is a common sequence, not a template. A small feature can stay vertical, and feature-local wiring should remain with the interface that first needs it.
+Lower-level work often comes first: behavior-preserving refactoring, shared types, backend work, then the interface that uses them. That is a common sequence, not a template. Substantial backend and frontend changes normally stay in separate stages; a small, tightly coupled vertical change can stay together. Feature-local wiring should remain with the interface that first needs it.
 
 Keep the plan current as the work changes.
 
-### 🛠️ 4. Implement one slice
+### 🛠️ 4. Implement one stage
 
-Implement the first unchecked slice and stop there. Without a plan, keep the change small enough to review. You can stay in the current chat, start a fresh one, or write the code yourself. When context moves, bring the plan and latest handoff. Use `/agentflow tdd` for test-first work.
+Implement the first unchecked stage and stop there. Without a plan, use the confirmed reading and keep the current stage small enough to review. You can stay in the current chat, start a fresh one, or write the code yourself. When context moves, bring the plan when present and the latest handoff. Use `/agentflow tdd` for test-first work.
 
-Load relevant skills named in `AGENTS.md`. If implementation spills into a later slice, update the plan instead of quietly expanding the current one.
+Load relevant skills named in `AGENTS.md`. If implementation spills into a later stage, update the plan when one exists instead of quietly expanding the current one.
 
-Before review, update `plan.md`. Check off the slice only after its checks pass, then record any scope changes that affect later work.
+Before review, update `plan.md` when one exists. Check off the stage only after its checks pass, then record any scope changes that affect later work.
 
 ### 🤖 5. Run an agent review
 
-Run `/agentflow review` on the completed slice. A subagent reviews what changed and why. It applies local fixes directly; anything it cannot decide comes back with the problem and a proposed fix.
+Run `/agentflow review` on the completed stage. A subagent reviews what changed and why, fixes defects, and performs behavior-preserving refactors across the affected code when the structure needs it. That may include coordinated changes across several files. If the code is already well-shaped, the assessment says so instead of manufacturing a refactor. Concrete improvements outside the safe review scope return as follow-ups; product and contract calls return as decisions.
 
 ### ✅ 6. Review and commit
 
@@ -125,9 +125,9 @@ Read the diff yourself, then commit it through the project's normal workflow.
 
 ### 🔄 7. Refresh the context
 
-Stay in the current chat while its context is useful. When it gets noisy, summarize it or start a fresh one. `/agentflow handoff` records what shipped, what changed, and which slice comes next.
+Stay in the current chat while its context is useful. When it gets noisy, summarize it or start a fresh one. `/agentflow handoff` records what shipped, what changed, and which stage comes next.
 
-Attach the plan and handoff to the new chat, then return to step 4.
+Attach the plan when present and the handoff to the new chat, then return to step 4.
 
 ### 📚 8. Archive or document the result
 

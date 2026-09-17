@@ -5,14 +5,17 @@ step and loads only the reference for the current mode. This file sequences the
 modes and names artifact paths.
 
 ```text
-Research → Grill → Plan → PR → Review → Commit
-                          ↑                  │
-                          └──── Next PR ─────┘
+Research → Grill → Plan → Stage → Review → Commit
+                          ↑                     │
+                          └──── Next stage ─────┘
 ```
 
-Skip Research when the area is already clear. Skip Plan when one small slice is
-enough. Run Handoff only when unfinished work moves to a fresh context. Run
-Document when the work should become a project page.
+Skip Research when the area is already clear. Use Plan only when sequencing,
+scope tracking, or handoff needs a durable artifact. Obvious work that fits one
+or two compact stages skips Plan, even when it crosses backend and frontend;
+keep the confirmed reading in chat and offer implementation. Run Handoff only
+when unfinished work moves to a fresh context. Run Document when the work
+should become a project page.
 
 ## 1. Research (optional)
 
@@ -34,43 +37,47 @@ change how the work will be done.
 
 ## 3. Plan (larger work)
 
-Run `agentflow plan` when the confirmed work needs more than one shippable
-slice. Small confirmed work continues at step 4 without a plan file.
+Run `agentflow plan` when the confirmed work needs durable coordination across
+several stages, non-obvious dependencies, or a likely context handoff. Compact,
+obvious work continues at step 4 without a plan file.
 
 **Done when:** `.agentflow/<feature>/plan.md` exists with the settled list and
-ordered unchecked PRs, or the plan was skipped for a single small slice.
+ordered unchecked stages, or the plan was skipped because the confirmed scope
+is compact and clear in the conversation.
 
-## 4. Implement one PR
+## 4. Implement one stage
 
-Implement only the first PR whose Complete box is unchecked. Nested tasks
-are progress inside that PR. Without a plan, keep one reviewable slice. Load
-project craft skills named in `AGENTS.md`. Run `agentflow tdd` for test-first
-work.
+Implement only the first stage whose Complete box is unchecked. Nested tasks
+are progress inside that stage. Without a plan, use the confirmed reading and
+keep the current stage reviewable. Load project craft skills named in
+`AGENTS.md`. Run `agentflow tdd` for test-first work.
 
-**Done when:** the slice meets its verify checks, its Complete box is checked
-(if a plan exists), and later PRs match what remains.
+**Done when:** the stage meets its verify checks, its Complete box is checked
+(if a plan exists), and later stages match what remains.
 
 ## 5. Review
 
-Run `agentflow review` on the completed slice. The review runs in a subagent
-with what changed and why. Local shrinks and obvious fixes land there. Anything
-left unfixed is a decision the reviewer could not make.
+Run `agentflow review` on the completed stage. The review runs in a subagent
+with what changed and why. It fixes defects and performs behavior-preserving
+refactors across the affected stage, including multi-file changes. Anything
+left unfixed needs a product decision, contract change, unrelated subsystem, or
+cannot be verified safely.
 
-**Done when:** leftover production structure is gone, obvious defects are
-fixed, and every unfixed problem is in front of the user with how to fix it.
+**Done when:** avoidable production structure is gone, defects are fixed, and
+every unfixed problem is in front of the user with how to fix it.
 
 ## 6. Commit
 
 Commit with the project's normal workflow, then return to step 4 for the next
-unchecked PR.
+unchecked stage.
 
-**Done when:** the slice is committed (or staged per project rules) and the next
-PR is identified or the plan is complete.
+**Done when:** the stage is committed (or staged per project rules) and the next
+stage is identified or the confirmed scope is complete.
 
 ## 7. Handoff (fresh context)
 
 Run `agentflow handoff` before moving unfinished work to another chat. Attach
-the plan and handoff there, then resume at step 4.
+the plan when present and the handoff there, then resume at step 4.
 
 **Done when:** `.agentflow/<feature>/handoff.md` exists, or the current chat
 continues without a context move.
